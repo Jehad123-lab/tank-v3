@@ -25,6 +25,7 @@ export class Tank {
   rotation: number = 0;
   recoil: number = 0;
   turretYaw: number = 0;
+  wasFiringInternal: boolean = false;
   
   // Bullets instances
   projectiles: { body: any, life: number, rot: Quaternion }[] = [];
@@ -86,13 +87,20 @@ export class Tank {
   /**
    * Updates physics and syncs mesh transforms.
    */
-  update(ts: number, moveDir: { x: number, y: number }, isFiring: boolean = false, cameraYaw: number = 0) {
+  update(ts: number, moveDir: { x: number, y: number }, isFiring: boolean = false, cameraYaw: number = 0): boolean {
     const speed = 15;
     const rotSpeed = 3.5;
 
-    if (isFiring && this.recoil <= 0) {
-        this.shoot();
-        this.recoil = 1.0;
+    let didShoot = false;
+    if (isFiring) {
+        if (this.recoil <= 0) {
+            this.shoot();
+            this.recoil = 1.0;
+            didShoot = true;
+        }
+        this.wasFiringInternal = true;
+    } else {
+        this.wasFiringInternal = false;
     }
 
     this.recoil -= (ts / 1000) * 5; 
@@ -187,6 +195,8 @@ export class Tank {
           this.projectiles.splice(i, 1);
        }
     }
+    
+    return didShoot;
   }
   
   /**

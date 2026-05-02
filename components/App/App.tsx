@@ -36,6 +36,7 @@ class GameScreen extends Screen {
   explosions: Explosion[] = [];
   moveDir = { x: 0, y: 0 };
   virtualFire = false;
+  wasFiring = false;
   virtualInteract = false;
   
   isPlayerInTank: boolean = true;
@@ -160,7 +161,8 @@ class GameScreen extends Screen {
     combinedMoveDir.x = Math.max(-1, Math.min(1, combinedMoveDir.x));
     combinedMoveDir.y = Math.max(-1, Math.min(1, combinedMoveDir.y));
 
-    const isFiring = inputManager.isActiveAction('FIRE') || this.virtualFire;
+    const currentFiringInput = inputManager.isActiveAction('FIRE') || inputManager.isMouseDown() || this.virtualFire;
+    const isFiring = currentFiringInput;
 
     this.level.update(ts);
 
@@ -222,7 +224,20 @@ class GameScreen extends Screen {
 
     // Update based on possessed entity
     if (this.isPlayerInTank) {
-      this.tank.update(ts, combinedMoveDir, isFiring, this.cameraYaw + Math.PI);
+      const didShoot = this.tank.update(ts, combinedMoveDir, isFiring, this.cameraYaw + Math.PI);
+      if (didShoot) {
+         const bPos = this.tank.barrel.getPosition();
+         const bRot = this.tank.barrel.getQuaternion();
+         const dir = bRot.rotateVector([0, 0, 1]);
+         
+         const muzzlePos = [
+             bPos[0] + dir[0] * 1.5,
+             bPos[1] + dir[1] * 1.5,
+             bPos[2] + dir[2] * 1.5,
+         ] as vec3;
+         
+         this.explosions.push(new Explosion(muzzlePos[0], muzzlePos[1], muzzlePos[2], [1.0, 0.8, 0.2], dir));
+      }
       
       // Stop player
       this.player.update(ts, { x: 0, y: 0 });
@@ -343,6 +358,11 @@ const Joystick = ({ onChange }: { onChange: (dir: { x: number, y: number }) => v
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handlePointerDown = (e: React.PointerEvent) => {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        if (e.nativeEvent && e.nativeEvent.stopImmediatePropagation) {
+            e.nativeEvent.stopImmediatePropagation();
+        }
         setDragging(true);
         (e.target as HTMLElement).setPointerCapture(e.pointerId);
     };
@@ -446,16 +466,28 @@ const App = () => {
 
     const handleFireDown = (e: React.PointerEvent | React.MouseEvent | React.TouchEvent) => {
         if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        if ((e as any).nativeEvent && (e as any).nativeEvent.stopImmediatePropagation) {
+            (e as any).nativeEvent.stopImmediatePropagation();
+        }
         if (gameScreenRef.current) gameScreenRef.current.virtualFire = true;
     };
 
     const handleFireUp = (e: React.PointerEvent | React.MouseEvent | React.TouchEvent) => {
         if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        if ((e as any).nativeEvent && (e as any).nativeEvent.stopImmediatePropagation) {
+            (e as any).nativeEvent.stopImmediatePropagation();
+        }
         if (gameScreenRef.current) gameScreenRef.current.virtualFire = false;
     };
 
     const handleInteract = (e: React.PointerEvent | React.MouseEvent | React.TouchEvent) => {
         if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        if ((e as any).nativeEvent && (e as any).nativeEvent.stopImmediatePropagation) {
+            (e as any).nativeEvent.stopImmediatePropagation();
+        }
         if (gameScreenRef.current) gameScreenRef.current.virtualInteract = true;
     };
 
