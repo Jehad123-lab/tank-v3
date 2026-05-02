@@ -214,8 +214,7 @@ export class Tank {
     const pVel = new Gfx3Jolt.Vec3(direction[0] * projSpeed, direction[1] * projSpeed, direction[2] * projSpeed);
     gfx3JoltManager.bodyInterface.SetLinearVelocity(pBody.body.GetID(), pVel);
     
-    const recoilForce = new Gfx3Jolt.Vec3(-direction[0] * 500, -direction[1] * 500, -direction[2] * 500);
-    gfx3JoltManager.bodyInterface.AddImpulse(this.physicsBody.body.GetID(), recoilForce);
+    // Tank no longer receives hard physics recoil from shooting to avoid camera jump
     
     this.projectiles.push({ body: pBody, life: 3.0, rot: q });
   }

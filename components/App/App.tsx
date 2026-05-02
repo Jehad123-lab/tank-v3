@@ -160,7 +160,7 @@ class GameScreen extends Screen {
     combinedMoveDir.x = Math.max(-1, Math.min(1, combinedMoveDir.x));
     combinedMoveDir.y = Math.max(-1, Math.min(1, combinedMoveDir.y));
 
-    const isFiring = inputManager.isJustActiveAction('FIRE') || inputManager.isMouseDown() || this.virtualFire;
+    const isFiring = inputManager.isActiveAction('FIRE') || this.virtualFire;
 
     this.level.update(ts);
 
@@ -222,20 +222,6 @@ class GameScreen extends Screen {
 
     // Update based on possessed entity
     if (this.isPlayerInTank) {
-      if (isFiring && this.tank.recoil <= 0) {
-         const bPos = this.tank.barrel.getPosition();
-         const bRot = this.tank.barrel.getQuaternion();
-         const dir = bRot.rotateVector([0, 0, 1]);
-         
-         const muzzlePos = [
-             bPos[0] + dir[0] * 1.5,
-             bPos[1] + dir[1] * 1.5,
-             bPos[2] + dir[2] * 1.5,
-         ] as vec3;
-         
-         this.explosions.push(new Explosion(muzzlePos[0], muzzlePos[1], muzzlePos[2], [1.0, 0.8, 0.2], dir));
-      }
-
       this.tank.update(ts, combinedMoveDir, isFiring, this.cameraYaw + Math.PI);
       
       // Stop player
