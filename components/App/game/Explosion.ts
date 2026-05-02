@@ -9,7 +9,7 @@ export class Explosion {
     static particleMesh: Gfx3Mesh | null = null;
     static qMat = new Quaternion();
 
-    constructor(x: number, y: number, z: number, color: [number, number, number] = [1.0, 0.4, 0.0]) {
+    constructor(x: number, y: number, z: number, color: [number, number, number] = [1.0, 0.4, 0.0], direction?: vec3) {
         if (!Explosion.particleMesh) {
             Explosion.particleMesh = createBoxMesh(0.5, 0.5, 0.5, [1.0, 1.0, 1.0]); // White box, we will rely on materials if we wanted color, or just keep it orange
             // Actually, we can just make it orange for all
@@ -19,13 +19,20 @@ export class Explosion {
         for (let i = 0; i < 20; i++) {
             const pos: vec3 = [x, y, z];
             
-            const speed = 5 + Math.random() * 15;
-            const dirX = (Math.random() - 0.5) * 2;
-            const dirY = Math.random(); // mostly up
-            const dirZ = (Math.random() - 0.5) * 2;
+            const speed = direction ? 10 + Math.random() * 20 : 5 + Math.random() * 15;
+            let dirX = (Math.random() - 0.5) * 2;
+            let dirY = Math.random(); // mostly up
+            let dirZ = (Math.random() - 0.5) * 2;
+            
+            if (direction) {
+                // Blend random vector with the given direction
+                dirX = direction[0] + (Math.random() - 0.5) * 0.5;
+                dirY = direction[1] + (Math.random() - 0.5) * 0.5;
+                dirZ = direction[2] + (Math.random() - 0.5) * 0.5;
+            }
             
             const vel: vec3 = UT.VEC3_SCALE(UT.VEC3_NORMALIZE([dirX, dirY, dirZ]), speed);
-            const life = 0.5 + Math.random() * 0.5;
+            const life = direction ? 0.1 + Math.random() * 0.2 : 0.5 + Math.random() * 0.5;
             
             this.particles.push({ pos, vel, life, maxLife: life });
         }

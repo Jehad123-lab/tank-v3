@@ -48,7 +48,7 @@ export class Tank {
     this.antenna = createBoxMesh(0.05, 1.5, 0.05, [0.1, 0.1, 0.1]);
 
     if (!Tank.projMesh) {
-      Tank.projMesh = createBoxMesh(0.4, 0.4, 0.4, [1.0, 0.5, 0.0]);
+      Tank.projMesh = createBoxMesh(0.2, 0.2, 1.6, [1.0, 0.8, 0.0]);
     }
 
     this.physicsBody = gfx3JoltManager.addBox({
@@ -210,7 +210,7 @@ export class Tank {
       settings: { mMassPropertiesOverride: 2.0, mRestitution: 0.4 }
     });
     
-    const projSpeed = 40;
+    const projSpeed = 70;
     const pVel = new Gfx3Jolt.Vec3(direction[0] * projSpeed, direction[1] * projSpeed, direction[2] * projSpeed);
     gfx3JoltManager.bodyInterface.SetLinearVelocity(pBody.body.GetID(), pVel);
     
@@ -237,10 +237,8 @@ export class Tank {
       const scale: [number, number, number] = [1, 1, 1];
       for (const p of this.projectiles) {
          const pPos = p.body.body.GetPosition();
-         const pRot = p.body.body.GetRotation();
-         const pQ = new Quaternion(pRot.GetW(), pRot.GetX(), pRot.GetY(), pRot.GetZ());
          const ZERO: [number, number, number] = [0,0,0];
-         const matProj = UT.MAT4_TRANSFORM([pPos.GetX(), pPos.GetY(), pPos.GetZ()], ZERO, scale, pQ);
+         const matProj = UT.MAT4_TRANSFORM([pPos.GetX(), pPos.GetY(), pPos.GetZ()], ZERO, scale, p.rot);
          gfx3MeshRenderer.drawMesh(Tank.projMesh, matProj);
       }
     }
