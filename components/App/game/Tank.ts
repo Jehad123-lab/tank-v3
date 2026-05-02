@@ -56,7 +56,7 @@ export class Tank {
       x: 0, y: 1.5, z: 0,
       motionType: Gfx3Jolt.EMotionType_Dynamic,
       layer: JOLT_LAYER_MOVING,
-      settings: { mAngularDamping: 1.0, mLinearDamping: 0.5 }
+      settings: { mAngularDamping: 1.0, mLinearDamping: 0.5, mMassPropertiesOverride: 100.0 }
     });
   }
 
@@ -207,7 +207,7 @@ export class Tank {
       x: startPos[0], y: startPos[1], z: startPos[2],
       motionType: Gfx3Jolt.EMotionType_Dynamic,
       layer: JOLT_LAYER_MOVING,
-      settings: { mMassPropertiesOverride: 2.0, mRestitution: 0.4 }
+      settings: { mMassPropertiesOverride: 2.0, mRestitution: 0.4, mIsSensor: true }
     });
     
     const projSpeed = 70;

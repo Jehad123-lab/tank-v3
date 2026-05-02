@@ -195,6 +195,7 @@ class GameScreen extends Screen {
                     this.explosions.push(new Explosion(ePos.GetX(), ePos.GetY(), ePos.GetZ(), [0.8, 0.2, 0.2]));
                     gfx3JoltManager.bodyInterface.SetPosition(enemy.physicsBody.body.GetID(), VEC3_TO_JOLT_RVEC3([0, -100, 0]), Gfx3Jolt.EActivation_DontActivate);
                 }
+                break;
             }
         }
     }
