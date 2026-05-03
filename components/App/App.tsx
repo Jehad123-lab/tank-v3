@@ -193,6 +193,13 @@ class GameScreen extends Screen {
                 enemy.hp -= 34; // 3 hits to kill (100 hp)
                 p.life = 0; 
                 this.explosions.push(new Explosion(pPos.GetX(), pPos.GetY(), pPos.GetZ()));
+                
+                // Add a consistent visual hop and push
+                const pushDir = p.rot.rotateVector([0, 0, 1]);
+                const pushMagnitude = 600;
+                const pushForce = new Gfx3Jolt.Vec3(pushDir[0] * pushMagnitude, 500, pushDir[2] * pushMagnitude);
+                gfx3JoltManager.bodyInterface.AddImpulse(enemy.physicsBody.body.GetID(), pushForce);
+
                 if (enemy.hp <= 0) {
                     this.explosions.push(new Explosion(ePos.GetX(), ePos.GetY(), ePos.GetZ(), [0.8, 0.2, 0.2]));
                     gfx3JoltManager.bodyInterface.SetPosition(enemy.physicsBody.body.GetID(), VEC3_TO_JOLT_RVEC3([0, -100, 0]), Gfx3Jolt.EActivation_DontActivate);
@@ -217,6 +224,17 @@ class GameScreen extends Screen {
             if (dist < (this.isPlayerInTank ? 2.5 : 1.0)) {
                 p.life = 0;
                 this.explosions.push(new Explosion(pPos.GetX(), pPos.GetY(), pPos.GetZ()));
+                
+                // Add a push to the player/tank
+                const pushDir = p.rot.rotateVector([0, 0, 1]);
+                if (this.isPlayerInTank) {
+                    const pushForce = new Gfx3Jolt.Vec3(pushDir[0] * 800, 200, pushDir[2] * 800);
+                    gfx3JoltManager.bodyInterface.AddImpulse(this.tank.physicsBody.body.GetID(), pushForce);
+                } else {
+                    const pushForce = new Gfx3Jolt.Vec3(pushDir[0] * 400, 200, pushDir[2] * 400);
+                    gfx3JoltManager.bodyInterface.AddImpulse(this.player.physicsBody.body.GetID(), pushForce);
+                }
+                
                 // Add camera shake or player damage logic here
             }
         }

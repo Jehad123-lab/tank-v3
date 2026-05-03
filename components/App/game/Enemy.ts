@@ -165,7 +165,7 @@ export class Enemy {
       x: startPos[0], y: startPos[1], z: startPos[2],
       motionType: Gfx3Jolt.EMotionType_Dynamic,
       layer: JOLT_LAYER_MOVING,
-      settings: { mMassPropertiesOverride: 2.0, mRestitution: 0.4, mIsSensor: true }
+      settings: { mMassPropertiesOverride: 0.01, mRestitution: 0.4 }
     });
     
     const projSpeed = 30; // slightly slower than player
