@@ -58,7 +58,7 @@ class GameScreen extends Screen {
        const x = (Math.random() - 0.5) * 200;
        const z = (Math.random() - 0.5) * 200;
        if (Math.abs(x) < 20 && Math.abs(z) < 20) continue;
-       this.enemies.push(new Enemy(x, 5, z));
+       this.enemies.push(new Enemy(x, 45, z));
     }
   }
 

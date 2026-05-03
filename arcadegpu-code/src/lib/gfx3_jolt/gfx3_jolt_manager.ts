@@ -261,8 +261,8 @@ class Gfx3JoltManager {
     let normal: Jolt.Vec3 | null = null;
 
     const ray = new Gfx3Jolt.RRayCast();
-    ray.mOrigin.Set(startX, startY, startZ);
-    ray.mDirection.Set(endX - startX, endY - startY, endZ - startZ);
+    ray.mOrigin = new Gfx3Jolt.RVec3(startX, startY, startZ);
+    ray.mDirection = new Gfx3Jolt.Vec3(endX - startX, endY - startY, endZ - startZ);
 
     const npq = this.system.GetNarrowPhaseQuery();
 

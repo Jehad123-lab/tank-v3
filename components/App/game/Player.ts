@@ -46,7 +46,7 @@ export class Player {
 
     this.physicsBody = gfx3JoltManager.addCapsule({
       radius: 0.4, height: 1.0,
-      x: 0, y: 5, z: 2,
+      x: 0, y: 45, z: 2,
       motionType: Gfx3Jolt.EMotionType_Dynamic,
       layer: JOLT_LAYER_MOVING,
       settings: { mAngularDamping: 1.0, mLinearDamping: 0.9, mFriction: 0.0, mAllowedDOFs: 7 }
