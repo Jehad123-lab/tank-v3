@@ -150,12 +150,11 @@ class Gfx3JoltManager {
       );
     }
 
-    for (let i = 0; i < options.vertices.length; i += 3) {
+    for (let i = 0; i < options.indexes.length; i += 3) {
       indexesArray.push_back(
         new Gfx3Jolt.IndexedTriangle(options.indexes[i + 0], options.indexes[i + 1], options.indexes[i + 2], 0)
       );
     }
-
     const m = new Gfx3Jolt.PhysicsMaterialList();
     const settings = new Gfx3Jolt.MeshShapeSettings(vertexArray, indexesArray, m);
     const result = settings.Create();

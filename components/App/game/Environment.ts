@@ -3,7 +3,7 @@ import { Gfx3Mesh } from '@lib/gfx3_mesh/gfx3_mesh';
 import { gfx3MeshRenderer } from '@lib/gfx3_mesh/gfx3_mesh_renderer';
 import { UT } from '@lib/core/utils';
 import { Quaternion } from '@lib/core/quaternion';
-import { createBoxMesh } from './GameUtils';
+import { createBoxMesh, createTerrainMesh, generateHeightmapCanvas } from './GameUtils';
 
 export class Environment {
   floor: Gfx3Mesh;
@@ -43,14 +43,16 @@ export class Environment {
       Environment.meshesInitialized = true;
     }
 
-    this.floor = createBoxMesh(400, 1, 400, [0.25, 0.45, 0.2]); // richer green floor
-    this.floor.setPosition(0, -0.5, 0);
+    const canvas = generateHeightmapCanvas(256, 256);
+    const terrainData = createTerrainMesh(400, 400, 100, 100, [0.25, 0.45, 0.2], canvas);
+    this.floor = terrainData.mesh;
     
-    gfx3JoltManager.addBox({
-      width: 400, height: 1, depth: 400,
-      x: 0, y: -0.5, z: 0,
-      motionType: Gfx3Jolt.EMotionType_Static,
-      layer: JOLT_LAYER_NON_MOVING
+    gfx3JoltManager.addPolygonShape({
+        vertices: terrainData.vertices,
+        indexes: terrainData.indexes,
+        x: 0, y: 0, z: 0,
+        motionType: Gfx3Jolt.EMotionType_Static,
+        layer: JOLT_LAYER_NON_MOVING
     });
 
     // Generate mountains/walls at the edges

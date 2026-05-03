@@ -122,12 +122,29 @@ export class Tank {
     const joltLinVel = new Gfx3Jolt.Vec3(linVel[0], curVel.GetY(), linVel[2]);
     gfx3JoltManager.bodyInterface.SetLinearVelocity(this.physicsBody.body.GetID(), joltLinVel);
     
-    const quat = Quaternion.createFromEuler(this.rotation, 0, 0, 'YXZ');
+    const pos = this.physicsBody.body.GetPosition();
+    let quat = Quaternion.createFromEuler(this.rotation, 0, 0, 'YXZ');
+    
+    // Cast a ray down to find the ground normal
+    const ray = gfx3JoltManager.createRay(pos.GetX(), pos.GetY() + 0.5, pos.GetZ(), pos.GetX(), pos.GetY() - 2.0, pos.GetZ());
+    if (ray.normal) {
+        const n: vec3 = [ray.normal.GetX(), ray.normal.GetY(), ray.normal.GetZ()];
+        const up: vec3 = [0, 1, 0];
+        let axis = UT.VEC3_CROSS(up, n);
+        const dot = UT.VEC3_DOT(up, n);
+        // Only align if there's a valid angle
+        if (UT.VEC3_LENGTH(axis) > 0.001 && dot < 0.999) {
+            axis = UT.VEC3_NORMALIZE(axis);
+            const angle = Math.acos(UT.VEC3_DOT(up, n));
+            const alignQ = Quaternion.createFromAxisAngle(axis, angle);
+            quat = Quaternion.multiply(alignQ, quat); // Multiply align * yaw
+        }
+    }
+
     const joltQuat = new Gfx3Jolt.Quat(quat.x, quat.y, quat.z, quat.w);
     gfx3JoltManager.bodyInterface.SetRotation(this.physicsBody.body.GetID(), joltQuat, Gfx3Jolt.EActivation_Activate);
 
     // Sync Mesh Positions
-    const pos = this.physicsBody.body.GetPosition();
     const rot = this.physicsBody.body.GetRotation();
     const q = new Quaternion(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
 

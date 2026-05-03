@@ -121,7 +121,23 @@ export class Enemy {
     const joltLinVel = new Gfx3Jolt.Vec3(linVel[0], curVel.GetY(), linVel[2]);
     gfx3JoltManager.bodyInterface.SetLinearVelocity(this.physicsBody.body.GetID(), joltLinVel);
     
-    const quat = Quaternion.createFromEuler(this.rotation, 0, 0, 'YXZ');
+    const curPos = this.physicsBody.body.GetPosition();
+    let quat = Quaternion.createFromEuler(this.rotation, 0, 0, 'YXZ');
+    
+    const ray = gfx3JoltManager.createRay(curPos.GetX(), curPos.GetY() + 0.5, curPos.GetZ(), curPos.GetX(), curPos.GetY() - 2.0, curPos.GetZ());
+    if (ray.normal) {
+        const n: vec3 = [ray.normal.GetX(), ray.normal.GetY(), ray.normal.GetZ()];
+        const up: vec3 = [0, 1, 0];
+        let axis = UT.VEC3_CROSS(up, n);
+        const dot = UT.VEC3_DOT(up, n);
+        if (UT.VEC3_LENGTH(axis) > 0.001 && dot < 0.999) {
+            axis = UT.VEC3_NORMALIZE(axis);
+            const angle = Math.acos(UT.VEC3_DOT(up, n));
+            const alignQ = Quaternion.createFromAxisAngle(axis, angle);
+            quat = Quaternion.multiply(alignQ, quat);
+        }
+    }
+
     const joltQuat = new Gfx3Jolt.Quat(quat.x, quat.y, quat.z, quat.w);
     gfx3JoltManager.bodyInterface.SetRotation(this.physicsBody.body.GetID(), joltQuat, Gfx3Jolt.EActivation_Activate);
     
