@@ -130,9 +130,10 @@ export class Enemy {
         const up: vec3 = [0, 1, 0];
         let axis = UT.VEC3_CROSS(up, n);
         const dot = UT.VEC3_DOT(up, n);
-        if (UT.VEC3_LENGTH(axis) > 0.001 && dot < 0.999) {
+        if (UT.VEC3_LENGTH(axis) > 0.001 && Math.abs(dot) < 0.999) {
             axis = UT.VEC3_NORMALIZE(axis);
-            const angle = Math.acos(UT.VEC3_DOT(up, n));
+            const clampedDot = Math.max(-1, Math.min(1, dot));
+            const angle = Math.acos(clampedDot);
             const alignQ = Quaternion.createFromAxisAngle(axis, angle);
             quat = Quaternion.multiply(alignQ, quat);
         }

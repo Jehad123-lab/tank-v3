@@ -44,7 +44,7 @@ export class Environment {
     }
 
     const canvas = generateHeightmapCanvas(256, 256);
-    const terrainData = createTerrainMesh(400, 400, 100, 100, [0.25, 0.45, 0.2], canvas);
+    const terrainData = createTerrainMesh(400, 400, 32, 32, [0.25, 0.45, 0.2], canvas);
     this.floor = terrainData.mesh;
     
     gfx3JoltManager.addPolygonShape({

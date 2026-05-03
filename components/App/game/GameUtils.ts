@@ -178,7 +178,7 @@ export function createTerrainMesh(width: number, depth: number, segmentsW: numbe
   }
 
   mesh.geo = Gfx3Mesh.buildVertices(verticesFlat.length / 3, verticesFlat, [], colorsFlat, normalsFlat, faceGroups);
-  mesh.beginVertices(mesh.geo.vertices.length / 14); // 14 floats per vertex
+  mesh.beginVertices(mesh.geo.vertices.length / 17); // 17 floats per vertex
   mesh.setVertices(mesh.geo.vertices);
   mesh.endVertices();
 
