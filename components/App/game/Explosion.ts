@@ -11,12 +11,10 @@ export class Explosion {
 
     constructor(x: number, y: number, z: number, color: [number, number, number] = [1.0, 0.4, 0.0], direction?: vec3) {
         if (!Explosion.particleMesh) {
-            Explosion.particleMesh = createBoxMesh(0.5, 0.5, 0.5, [1.0, 1.0, 1.0]); // White box, we will rely on materials if we wanted color, or just keep it orange
-            // Actually, we can just make it orange for all
-            Explosion.particleMesh = createBoxMesh(0.5, 0.5, 0.5, [1.0, 0.4, 0.0]);
+            Explosion.particleMesh = createBoxMesh(0.8, 0.8, 0.8, [1.0, 0.5, 0.0]);
         }
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 6; i++) {
             const pos: vec3 = [x, y, z];
             
             const speed = direction ? 10 + Math.random() * 20 : 5 + Math.random() * 15;

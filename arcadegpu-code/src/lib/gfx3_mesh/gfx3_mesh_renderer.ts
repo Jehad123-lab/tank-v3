@@ -63,7 +63,7 @@ class Gfx3MeshRenderer extends Gfx3RendererAbstract {
     this.s1Texture = this.grp0.setSampler(14, 'S1_SAMPLER', this.s1Texture);
 
     this.grp1 = gfx3Manager.createDynamicGroup('MESH_PIPELINE', 1);
-    this.meshInfos = this.grp1.setFloat(0, 'MESH_MATRICES', 16 * 5);
+    this.meshInfos = this.grp1.setFloat(0, 'MESH_MATRICES', 48);
 
     this.grp0.allocate();
     this.grp1.allocate();
