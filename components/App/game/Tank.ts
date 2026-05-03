@@ -220,8 +220,14 @@ export class Tank {
       settings: { mMassPropertiesOverride: 0.01, mRestitution: 0.4 }
     });
     
-    const projSpeed = 70;
-    const pVel = new Gfx3Jolt.Vec3(direction[0] * projSpeed, direction[1] * projSpeed, direction[2] * projSpeed);
+    // Add arced motion similar to artillery/grenades
+    const forwardSpeed = 45;
+    const upwardVelocity = 15;
+    const pVel = new Gfx3Jolt.Vec3(
+      direction[0] * forwardSpeed, 
+      (direction[1] * forwardSpeed) + upwardVelocity, 
+      direction[2] * forwardSpeed
+    );
     gfx3JoltManager.bodyInterface.SetLinearVelocity(pBody.body.GetID(), pVel);
     
     // Tank no longer receives hard physics recoil from shooting to avoid camera jump

@@ -168,8 +168,14 @@ export class Enemy {
       settings: { mMassPropertiesOverride: 0.01, mRestitution: 0.4 }
     });
     
-    const projSpeed = 30; // slightly slower than player
-    const pVel = new Gfx3Jolt.Vec3(direction[0] * projSpeed, direction[1] * projSpeed, direction[2] * projSpeed);
+    // Add arced motion similar to artillery/grenades
+    const forwardSpeed = 35; // slightly slower than player
+    const upwardVelocity = 15;
+    const pVel = new Gfx3Jolt.Vec3(
+      direction[0] * forwardSpeed, 
+      (direction[1] * forwardSpeed) + upwardVelocity, 
+      direction[2] * forwardSpeed
+    );
     gfx3JoltManager.bodyInterface.SetLinearVelocity(pBody.body.GetID(), pVel);
     
     const recoilForce = new Gfx3Jolt.Vec3(-direction[0] * 500, -direction[1] * 500, -direction[2] * 500);
